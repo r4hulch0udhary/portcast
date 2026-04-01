@@ -1,5 +1,6 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, current_app
 from http import HTTPStatus
+from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.search_service import SearchService
 from app.repositories.paragraph_repository import ParagraphRepository
 from app.models.paragraph import db
@@ -23,10 +24,11 @@ async def search_paragraphs():
         if operator not in ["and", "or"]:
             return jsonify({"error": "Operator must be 'and' or 'or'"}), HTTPStatus.BAD_REQUEST
         
-        async with db.session() as session:
+        async with AsyncSession(current_app.engine) as session:
             paragraph_repo = ParagraphRepository(session)
             search_service = SearchService(paragraph_repo)
             paragraphs = await search_service.search_paragraphs(session, words, operator)
             return jsonify({"paragraphs": paragraphs}), HTTPStatus.OK
     except Exception as e:
+        current_app.logger.error(f"Error in search: {str(e)}", exc_info=True)
         return jsonify({"error": str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR

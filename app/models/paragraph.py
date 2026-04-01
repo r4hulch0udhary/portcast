@@ -11,4 +11,5 @@ class Paragraph(db.Model):
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
     content = Column(Text, nullable=False)
+    content_hash = Column(String(64), nullable=False, unique=True)  # SHA256 hash
     created_at = Column(DateTime(timezone=True), server_default=func.now())
