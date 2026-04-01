@@ -4,6 +4,7 @@ from app.models.paragraph import Paragraph
 from typing import List
 import hashlib
 
+
 class ParagraphRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
@@ -27,17 +28,15 @@ class ParagraphRepository:
         return result.scalars().all()
 
     async def search_by_words(self, words: List[str], operator: str) -> List[Paragraph]:
-        # Use PostgreSQL full-text search
-        ts_vector = func.to_tsvector('english', Paragraph.content)
+        # Use 'simple' config so stopwords (the, and, they…) are not stripped
+        ts_vector = func.to_tsvector("simple", Paragraph.content)
         if operator == "and":
-            query_str = ' & '.join(words)
-        elif operator == "or":
-            query_str = ' | '.join(words)
+            query_str = " & ".join(w.lower() for w in words)
         else:
-            query_str = ' | '.join(words)  # default to or
-        
-        ts_query = func.to_tsquery('english', query_str)
-        query = select(Paragraph).where(ts_vector.op('@@')(ts_query))
-        
+            query_str = " | ".join(w.lower() for w in words)
+
+        ts_query = func.to_tsquery("simple", query_str)
+        query = select(Paragraph).where(ts_vector.op("@@")(ts_query))
+
         result = await self.session.execute(query)
         return result.scalars().all()

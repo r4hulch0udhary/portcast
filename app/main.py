@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.pool import NullPool
 from app.models.paragraph import db
 from app.api.fetch import fetch_bp
 from app.api.search import search_bp
@@ -19,7 +20,7 @@ def create_app():
 
     # Create async engine
     async_db_url = config.database_url.replace("postgresql://", "postgresql+asyncpg://")
-    engine = create_async_engine(async_db_url)
+    engine = create_async_engine(async_db_url, poolclass=NullPool)
     app.engine = engine
 
     db.init_app(app)
