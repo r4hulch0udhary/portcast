@@ -136,9 +136,10 @@ dmypy.json
 .DS_Store
 Thumbs.db
 
-.github/
+.github/*
 task.txt
 
 # Logs
 log/
 *.log
+!.github/workflows/
