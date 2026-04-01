@@ -11,7 +11,11 @@ class Config(BaseSettings):
     port: int = Field(default=8000, alias="PORT")
     host: str = Field(default="0.0.0.0", alias="HOST")
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        extra="ignore"
+    )
 
 
 config = Config()
