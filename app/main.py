@@ -1,7 +1,15 @@
+"""
+Main Application Entry Point.
+
+This module initializes the asynchronous Flask application, configures the
+database engine, registers API blueprints, and sets up CORS, logging, and Swagger UI.
+"""
+
 from flask import Flask, send_from_directory
 from flask_cors import CORS
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import NullPool
+
 from app.models.paragraph import db
 from app.api.fetch import fetch_bp
 from app.api.search import search_bp
@@ -10,7 +18,17 @@ from app.docs import init_swagger_ui
 from app.config import config
 from app.app_logger import setup_logging
 
-def create_app():
+
+def create_app() -> Flask:
+    """
+    Application Factory for creating the Flask app instance.
+
+    Sets up the application configuration, initializes the asynchronous database engine,
+    registers blueprints for routes, and enables CORS and Swagger UI.
+
+    Returns:
+        Flask: The configured Flask application instance.
+    """
     app = Flask(__name__)
 
     app.config["SQLALCHEMY_DATABASE_URI"] = config.database_url
@@ -34,15 +52,16 @@ def create_app():
     app.register_blueprint(dictionary_bp)
 
     # Serve the HTML client at root
-    @app.route('/')
+    @app.route("/")
     def index():
-        return send_from_directory('../public', 'index.html')
+        return send_from_directory("../public", "index.html")
 
     # Set up logging
     setup_logging()
     app.logger.info("App started")
 
     return app
+
 
 app = create_app()
 
