@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.services.search_service import SearchService
 from app.repositories.paragraph_repository import ParagraphRepository
 from app.models.paragraph import db
+import re
 
 search_bp = Blueprint("search", __name__, url_prefix="/search")
 
@@ -17,7 +18,7 @@ async def search_paragraphs():
         if not words_str or not operator:
             return jsonify({"error": "Missing words or operator"}), HTTPStatus.BAD_REQUEST
         
-        words = [w.strip() for w in words_str.split(",") if w.strip()]
+        words = [w.strip() for w in re.split(r'[,\s]+', words_str) if w.strip()]
         if not words:
             return jsonify({"error": "No valid words provided"}), HTTPStatus.BAD_REQUEST
         

@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, send_from_directory
 from flask_cors import CORS
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import NullPool
@@ -32,6 +32,11 @@ def create_app():
     app.register_blueprint(fetch_bp)
     app.register_blueprint(search_bp)
     app.register_blueprint(dictionary_bp)
+
+    # Serve the HTML client at root
+    @app.route('/')
+    def index():
+        return send_from_directory('../public', 'index.html')
 
     # Set up logging
     setup_logging()

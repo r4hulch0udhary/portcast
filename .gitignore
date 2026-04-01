@@ -138,3 +138,7 @@ Thumbs.db
 
 .github/
 task.txt
+
+# Logs
+log/
+*.log
