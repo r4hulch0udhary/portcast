@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS
 from sqlalchemy.ext.asyncio import create_async_engine
 from app.models.paragraph import db
 from app.api.fetch import fetch_bp
@@ -22,6 +23,8 @@ def create_app():
     app.engine = engine
 
     db.init_app(app)
+
+    CORS(app)  # Enable CORS for all routes
 
     init_swagger_ui(app)
 
