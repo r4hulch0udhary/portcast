@@ -1,5 +1,6 @@
 from app.external.metaphorpsum import MetaphorpsumClient
 from app.repositories.paragraph_repository import ParagraphRepository
+from app.cache import invalidate_dictionary_cache
 from sqlalchemy.ext.asyncio import AsyncSession
 import hashlib
 
@@ -21,5 +22,6 @@ class FetchService:
             content_hash = hashlib.sha256(content.encode()).hexdigest()
             if not await repo.hash_exists(content_hash):
                 await repo.save(content)
+                invalidate_dictionary_cache()
                 return content
         raise Exception("Unable to fetch a unique paragraph after multiple attempts")

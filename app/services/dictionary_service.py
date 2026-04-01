@@ -2,6 +2,7 @@ import re
 from collections import Counter
 from app.external.dictionary_api import DictionaryAPIClient
 from app.repositories.paragraph_repository import ParagraphRepository
+import app.cache as cache_module
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import List, Dict
 
@@ -11,6 +12,9 @@ class DictionaryService:
         self.paragraph_repo = paragraph_repo
 
     async def get_top_words_definitions(self, session: AsyncSession, top_n: int = 10) -> List[Dict[str, str]]:
+        if cache_module.dictionary_result_cache is not None:
+            return cache_module.dictionary_result_cache
+
         repo = ParagraphRepository(session)
         paragraphs = await repo.get_all()
         all_text = " ".join([p.content for p in paragraphs])
@@ -28,5 +32,6 @@ class DictionaryService:
             definition = await self.dictionary_client.get_definition(word)
             if definition:
                 definitions.append({"word": word, "definition": definition})
-        
+
+        cache_module.dictionary_result_cache = definitions
         return definitions
