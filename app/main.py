@@ -4,6 +4,7 @@ from app.models.paragraph import db
 from app.api.fetch import fetch_bp
 from app.api.search import search_bp
 from app.api.dictionary import dictionary_bp
+from app.docs import init_swagger_ui
 from app.config import config
 
 def create_app():
@@ -16,6 +17,8 @@ def create_app():
 
     db.init_app(app)
     alembic = Alembic(app)
+
+    init_swagger_ui(app)
 
     app.register_blueprint(fetch_bp)
     app.register_blueprint(search_bp)

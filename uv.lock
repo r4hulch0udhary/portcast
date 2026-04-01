@@ -162,6 +162,18 @@ wheels = [
 ]
 
 [[package]]
+name = "flask-swagger-ui"
+version = "5.32.1.post2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flask" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/d4/0c391a02ba502773103e685a84d3caf4b1686253d895edd40dae0a217460/flask_swagger_ui-5.32.1.post2.tar.gz", hash = "sha256:083e17e6c2b27dfe54294639ef460bce2f1db1897e0ae0d1299c944bafe03a22", size = 613337, upload-time = "2026-03-26T10:39:55.728Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2d/07/db12a7c014b21dc62b385aefd756e89fd1461eaebf5e6d7e3da7c3ea85fa/flask_swagger_ui-5.32.1.post2-py3-none-any.whl", hash = "sha256:b1949f70767a53886bd5957d54e545622e1d051ee5366e039e2ef7819948436e", size = 618392, upload-time = "2026-03-26T10:39:53.955Z" },
+]
+
+[[package]]
 name = "greenlet"
 version = "3.3.2"
 source = { registry = "https://pypi.org/simple" }
@@ -397,6 +409,7 @@ dependencies = [
     { name = "flask" },
     { name = "flask-alembic" },
     { name = "flask-sqlalchemy" },
+    { name = "flask-swagger-ui" },
     { name = "httpx" },
     { name = "hypercorn" },
     { name = "psycopg2-binary" },
@@ -411,6 +424,7 @@ requires-dist = [
     { name = "flask", specifier = ">=2.0.0" },
     { name = "flask-alembic", specifier = ">=3.0.0" },
     { name = "flask-sqlalchemy", specifier = ">=3.0.0" },
+    { name = "flask-swagger-ui", specifier = ">=4.0.0" },
     { name = "httpx", specifier = ">=0.25.0" },
     { name = "hypercorn", specifier = ">=0.16.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.0" },
