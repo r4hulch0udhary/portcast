@@ -51,55 +51,7 @@ class DictionaryService:
             return cache_module.dictionary_result_cache
 
         repo = ParagraphRepository(session)
-        paragraphs = await repo.get_all()
-        all_text = " ".join([p.content for p in paragraphs])
-
-        # Normalize words: lowercase, remove punctuation, ignore stopwords
-        words = re.findall(r"\b\w+\b", all_text.lower())
-        stopwords = {
-            "the",
-            "a",
-            "an",
-            "and",
-            "or",
-            "but",
-            "in",
-            "on",
-            "at",
-            "to",
-            "for",
-            "of",
-            "with",
-            "by",
-            "is",
-            "are",
-            "was",
-            "were",
-            "be",
-            "been",
-            "being",
-            "have",
-            "has",
-            "had",
-            "do",
-            "does",
-            "did",
-            "will",
-            "would",
-            "could",
-            "should",
-            "may",
-            "might",
-            "must",
-            "can",
-            "shall",
-        }
-        filtered_words = [
-            word for word in words if word not in stopwords and len(word) > 2
-        ]
-
-        word_counts = Counter(filtered_words)
-        top_words = [word for word, _ in word_counts.most_common(top_n)]
+        top_words = await repo.get_top_words(top_n)
 
         definitions = []
         for word in top_words:

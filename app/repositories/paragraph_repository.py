@@ -8,7 +8,7 @@ Includes functionality for checking existence via SHA-256 and Full-Text Search.
 from typing import List
 import hashlib
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select, func, text
 from app.models.paragraph import Paragraph
 
 
@@ -89,3 +89,35 @@ class ParagraphRepository:
 
         result = await self.session.execute(query)
         return result.scalars().all()
+
+    async def get_top_words(self, top_n: int = 10) -> List[str]:
+        """
+        Calculates the most frequent words at the database level avoiding memory bloat.
+
+        Args:
+            top_n (int): Overridden max limit.
+
+        Returns:
+            List[str]: The most frequent words found globally.
+        """
+        # Perform computation cleanly inside Postgres runtime with equivalent rules.
+        query = text(r"""
+            WITH words AS (
+                SELECT unnest(regexp_split_to_array(lower(content), '\W+')) AS word
+                FROM paragraphs
+            )
+            SELECT word
+            FROM words
+            WHERE length(word) > 2
+              AND word NOT IN (
+                'the','a','an','and','or','but','in','on','at','to','for','of','with','by',
+                'is','are','was','were','be','been','being','have','has','had',
+                'do','does','did','will','would','could','should','may','might','must','can','shall'
+              )
+            GROUP BY word
+            ORDER BY count(*) DESC, word ASC
+            LIMIT :top_n
+        """)
+
+        result = await self.session.execute(query, {"top_n": top_n})
+        return [row[0] for row in result.all()]

@@ -20,7 +20,7 @@ async def test_get_top_words_definitions(db_session, setup_test_db):
 
     service = DictionaryService(mock_client, repo)
 
-    results = await service.get_top_words_definitions(db_session, top_n=5)
+    results = await service.get_top_words_definitions(db_session, top_n=10)
 
     # Should only have definitions for the word 'test' based on the mock
     assert len(results) == 1
