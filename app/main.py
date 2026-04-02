@@ -9,6 +9,7 @@ from flask import Flask, send_from_directory
 from flask_cors import CORS
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.pool import NullPool
+from asgiref.wsgi import WsgiToAsgi
 
 from app.models.paragraph import db
 from app.api.fetch import fetch_bp
@@ -64,6 +65,8 @@ def create_app() -> Flask:
 
 
 app = create_app()
+
+asgi_app = WsgiToAsgi(app)
 
 if __name__ == "__main__":
     app.run(host=config.host, port=config.port, debug=config.debug)
