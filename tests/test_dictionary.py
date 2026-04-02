@@ -22,5 +22,7 @@ async def test_get_top_words_definitions(db_session, setup_test_db):
 
     results = await service.get_top_words_definitions(db_session, top_n=5)
 
-    # Should have definitions for top words
-    assert len(results) >= 0  # Depending on words
+    # Should only have definitions for the word 'test' based on the mock
+    assert len(results) == 1
+    assert results[0]["word"] == "test"
+    assert results[0]["definition"] == "Definition of test"
