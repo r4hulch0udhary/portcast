@@ -50,4 +50,4 @@ uv run python -m pytest tests/ -v
 docker-compose up --build -d
 ```
 
-Visit `http://localhost:8000` to access the Vue.js frontend client or `http://localhost:8000/apidocs` for Swagger OpenAPI documentation!
+Visit `http://localhost:8000` to access the Vue.js frontend client or `http://localhost:8000/docs` for Swagger OpenAPI documentation!
